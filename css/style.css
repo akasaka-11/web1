@@ -1,3 +1,10 @@
+/* ==========================================================
+   The Copper Spoon — style.css
+   HTML & CSS Basics, Assignment #1
+   Team: The Copper Spoon (Group SE-2509)
+   ========================================================== */
+
+/* ---------- Element selectors (global reset / defaults) ---------- */
 * {
   margin: 0;
   padding: 0;
