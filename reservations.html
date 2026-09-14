@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Copper Spoon | Reservations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <header id="main-header">
+    <nav>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="menu.html">Menu</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="reservations.html" class="active">Reservations</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="section">
+    <h1 class="section-title">Reserve a Table</h1>
+
+    <h2>How It Works</h2>
+    <ol>
+      <li>Fill out the form below with your details and preferred time.</li>
+      <li>We confirm your reservation by email within a few hours.</li>
+      <li>Arrive, check in at the front desk, and enjoy your meal.</li>
+    </ol>
+
+    <form id="reservation-form" action="#" method="post">
+      <div class="form-group">
+        <label for="res-name">Full Name</label>
+        <input type="text" id="res-name" name="res-name" placeholder="Your name" required>
+      </div>
+
+      <div class="form-group">
+        <label for="res-email">Email</label>
+        <input type="email" id="res-email" name="res-email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="res-guests">Number of Guests</label>
+        <select id="res-guests" name="res-guests">
+          <option value="1">1</option>
+          <option value="2" selected>2</option>
+          <option value="3">3</option>
+          <option value="4">4</option>
+          <option value="5+">5 or more</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Seating Preference</label>
+        <div class="radio-group">
+          <label><input type="radio" name="seating" value="indoor" checked> Indoor</label>
+          <label><input type="radio" name="seating" value="outdoor"> Outdoor</label>
+          <label><input type="radio" name="seating" value="bar"> Bar</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="res-notes">Special Requests</label>
+        <textarea id="res-notes" name="res-notes" rows="4" placeholder="Allergies, birthday, anything we should know"></textarea>
+      </div>
+
+      <button type="submit" class="btn">Submit Reservation</button>
+    </form>
+  </section>
+
+  <footer>
+    <p>Team members: Amir Kadylbek &middot; Zhursin Sirnebayev &middot; Beknur Syzdyk</p>
+  </footer>
+
+</body>
+</html>
