@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Copper Spoon — Home</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-copper px-sm-2 py-lg-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">The Copper Spoon</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-lg-3">
+        <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="reservations.html">Reservations</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="register.html">Sign Up</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<header class="hero">
+  <h1>The Copper Spoon</h1>
+  <p class="mb-4">Honest food, cooked simply, served warm.</p>
+  <a href="reservations.html" class="btn btn-copper btn-lg px-4">Book a Table</a>
+</header>
+
+<section class="page-layout">
+  <aside class="opening-hours">
+    <h3 class="h5">Opening Hours</h3>
+    <p class="mb-1">Monday – Sunday</p>
+    <p class="mb-0">10:00 – 22:00</p>
+    <hr>
+    <h3 class="h6">Current date &amp; time</h3>
+    <p id="datetime" class="mb-0 fw-bold"></p>
+  </aside>
+  <main>
+    <h2>Welcome</h2>
+    <p>The Copper Spoon started as a small family kitchen and grew into a neighborhood restaurant
+       where people come back for the same dish they had the first time.</p>
+    <p>Take a look at our <a href="menu.html">menu</a>, get to know <a href="about.html">the team</a>,
+       or <a href="reservations.html">reserve a table</a> for your next visit.</p>
+  </main>
+</section>
+
+<!-- TASK 2: plain CSS card group, no Bootstrap grid classes used here -->
+<h2 class="text-center mt-4">A Few Favorites</h2>
+<div class="plain-card-group">
+  <div class="plain-card">
+    <img src="https://images.unsplash.com/photo-1541618530-bd0a83a67f76?auto=format&fit=crop&w=600&q=80" alt="Copper House Burger">
+    <div class="plain-card-body">
+      <h3 class="h5 brand-font">Copper House Burger</h3>
+      <p class="mb-0">Our most ordered dish, three years running.</p>
+    </div>
+  </div>
+  <div class="plain-card">
+    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80" alt="Wood-Fired Pizza">
+    <div class="plain-card-body">
+      <h3 class="h5 brand-font">Wood-Fired Pizza</h3>
+      <p class="mb-0">Baked fresh in small batches every evening.</p>
+    </div>
+  </div>
+  <div class="plain-card">
+    <img src="https://images.unsplash.com/photo-1608108132933-741a71c144ef?auto=format&fit=crop&w=600&q=80" alt="Chocolate Layer Cake">
+    <div class="plain-card-body">
+      <h3 class="h5 brand-font">Chocolate Layer Cake</h3>
+      <p class="mb-0">Made in-house, and usually gone by closing.</p>
+    </div>
+  </div>
+</div>
+
+<!-- TASK 6: Bootstrap buttons + button group -->
+<section class="container my-5 text-center">
+  <h2>Quick Actions</h2>
+  <div class="btn-group mb-3" role="group" aria-label="Quick actions">
+    <a href="reservations.html" class="btn btn-copper">Reserve</a>
+    <a href="menu.html" class="btn btn-outline-secondary">View Menu</a>
+    <a href="contact.html" class="btn btn-outline-secondary">Contact Us</a>
+  </div>
+  <div class="mb-4">
+    <button class="btn btn-copper btn-sm me-2">Small</button>
+    <button class="btn btn-copper me-2">Default</button>
+    <button class="btn btn-copper btn-lg">Large</button>
+  </div>
+  <!-- TASK 3 trigger + TASK 4 button -->
+  <div>
+    <button type="button" class="btn btn-copper me-2 mb-2" data-open-popup>Subscribe</button>
+    <button type="button" class="btn btn-outline-secondary mb-2" id="bgColorBtn">Change Background Color</button>
+  </div>
+</section>
+
+<!-- TASK 3: popup subscription form (hidden by default) -->
+<div class="popup-overlay" id="popupOverlay" aria-hidden="true">
+  <div class="popup-box" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <button type="button" class="popup-close" id="popupClose" aria-label="Close">&times;</button>
+    <h2 id="popupTitle" class="h4">Subscribe to our newsletter</h2>
+    <p>Seasonal menus and special offers, straight to your inbox.</p>
+    <form id="subscribeForm" class="needs-validation" novalidate data-success="Thanks for subscribing!">
+      <div class="mb-3">
+        <label for="subName" class="form-label">Name</label>
+        <input type="text" class="form-control" id="subName" name="name" data-label="Name" minlength="2" required>
+      </div>
+      <div class="mb-3">
+        <label for="subEmail" class="form-label">Email</label>
+        <input type="email" class="form-control" id="subEmail" name="email" data-label="Email" required>
+      </div>
+      <button type="submit" class="btn btn-copper w-100">Subscribe</button>
+    </form>
+  </div>
+</div>
+
+<footer class="site-footer text-center py-3 mt-4">
+  <p class="mb-0">Team members: Amir Kadylbek · Zhursin Sirnebayev · Beknur Syzdyk</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/validation.js"></script>
+<script src="js/popup.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/datetime.js"></script>
+</body>
+</html>

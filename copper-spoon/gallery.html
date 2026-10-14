@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Copper Spoon — Gallery</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-copper px-sm-2 py-lg-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">The Copper Spoon</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-lg-3">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link active" href="gallery.html">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="reservations.html">Reservations</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="register.html">Sign Up</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-lg-5 mt-3 px-sm-2">
+  <h1 class="text-center">Gallery</h1>
+  <p class="text-center mb-4">A few shots from the dining room and the kitchen.</p>
+
+  <!-- TASK 7: Bootstrap carousel, 9 images, indicators + controls -->
+  <div id="galleryCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="3" aria-label="Slide 4"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="4" aria-label="Slide 5"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="5" aria-label="Slide 6"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="6" aria-label="Slide 7"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="7" aria-label="Slide 8"></button>
+      <button type="button" data-bs-target="#galleryCarousel" data-bs-slide-to="8" aria-label="Slide 9"></button>
+    </div>
+    <div class="carousel-inner rounded">
+      <div class="carousel-item active"><img src="https://images.unsplash.com/photo-1667388969250-1c7220bf3f37?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Dining room"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1541618530-bd0a83a67f76?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Copper House Burger"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Wood-fired pizza"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1712725214706-e564b8dd1bbe?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Sushi sampler"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1608108132933-741a71c144ef?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Chocolate layer cake"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1472245088132-ccd50746725c?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="House drinks"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Kitchen at work"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1541618530-bd0a83a67f76?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Grilled salmon"></div>
+      <div class="carousel-item"><img src="https://images.unsplash.com/photo-1608108132933-741a71c144ef?auto=format&fit=crop&w=1000&h=500&q=80" class="d-block w-100" alt="Outdoor seating"></div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#galleryCarousel" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#galleryCarousel" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+
+  <!-- Kept from Assignment 2: CSS Grid photo gallery -->
+  <h2 class="text-center mb-3">Photo Grid</h2>
+  <div class="gallery-grid mb-4">
+    <figure class="m-0"><img src="https://images.unsplash.com/photo-1667388969250-1c7220bf3f37?auto=format&fit=crop&w=500&q=80" alt="Our dining room"><figcaption class="small text-center">Our dining room</figcaption></figure>
+    <figure class="m-0"><img src="https://images.unsplash.com/photo-1541618530-bd0a83a67f76?auto=format&fit=crop&w=500&q=80" alt="Copper House Burger"><figcaption class="small text-center">Copper House Burger</figcaption></figure>
+    <figure class="m-0"><img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=500&q=80" alt="Wood-fired pizza"><figcaption class="small text-center">Wood-fired pizza</figcaption></figure>
+    <figure class="m-0"><img src="https://images.unsplash.com/photo-1712725214706-e564b8dd1bbe?auto=format&fit=crop&w=500&q=80" alt="Sushi sampler"><figcaption class="small text-center">Sushi sampler</figcaption></figure>
+    <figure class="m-0"><img src="https://images.unsplash.com/photo-1608108132933-741a71c144ef?auto=format&fit=crop&w=500&q=80" alt="Chocolate layer cake"><figcaption class="small text-center">Chocolate layer cake</figcaption></figure>
+    <figure class="m-0"><img src="https://images.unsplash.com/photo-1472245088132-ccd50746725c?auto=format&fit=crop&w=500&q=80" alt="House drinks"><figcaption class="small text-center">House drinks</figcaption></figure>
+  </div>
+
+  <h2 class="text-center">Follow Us</h2>
+  <ul class="list-unstyled text-center mb-5">
+    <li>Instagram: @coppersponrestaurant</li>
+    <li>Facebook: The Copper Spoon</li>
+    <li>TikTok: @coppersponeats</li>
+  </ul>
+</div>
+
+<footer class="site-footer text-center py-3 mt-4">
+  <p class="mb-0">Team members: Amir Kadylbek · Zhursin Sirnebayev · Beknur Syzdyk</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

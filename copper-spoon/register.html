@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Copper Spoon — Sign Up</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-copper px-sm-2 py-lg-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">The Copper Spoon</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-lg-3">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link" href="reservations.html">Reservations</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link active" href="register.html">Sign Up</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-lg-5 mt-3 px-sm-2" style="max-width:600px;">
+  <h1 class="text-center">Create an Account</h1>
+  <p class="text-center mb-4">Join The Copper Spoon club to get early access to seasonal menus.</p>
+
+  <!-- TASK 1: registration form with validation -->
+  <form id="registerForm" class="card p-lg-4 p-3 shadow-sm mb-5 needs-validation" novalidate data-success="Account created successfully! Welcome to The Copper Spoon.">
+    <div class="mb-3">
+      <label for="regName" class="form-label">Full Name</label>
+      <input type="text" class="form-control" id="regName" name="name" data-label="Full name" minlength="2" placeholder="Your name" required>
+    </div>
+    <div class="mb-3">
+      <label for="regEmail" class="form-label">Email</label>
+      <input type="email" class="form-control" id="regEmail" name="email" data-label="Email" placeholder="you@example.com" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Password</label>
+      <input type="password" class="form-control" id="password" name="password" data-label="Password" minlength="8" data-strong placeholder="At least 8 characters, letters and numbers" required>
+    </div>
+    <div class="mb-3">
+      <label for="confirmPassword" class="form-label">Confirm Password</label>
+      <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" data-label="Password confirmation" data-match="#password" placeholder="Repeat your password" required>
+    </div>
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="terms" name="terms" required>
+      <label class="form-check-label" for="terms">I agree to the terms and conditions</label>
+    </div>
+    <button type="submit" class="btn btn-copper w-100">Sign Up</button>
+  </form>
+</div>
+
+<footer class="site-footer text-center py-3 mt-4">
+  <p class="mb-0">Team members: Amir Kadylbek · Zhursin Sirnebayev · Beknur Syzdyk</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/validation.js"></script>
+</body>
+</html>

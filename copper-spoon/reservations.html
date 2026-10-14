@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Copper Spoon — Reservations</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-copper px-sm-2 py-lg-3">
+  <div class="container">
+    <a class="navbar-brand" href="index.html">The Copper Spoon</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navMenu">
+      <ul class="navbar-nav ms-auto gap-lg-3">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="menu.html">Menu</a></li>
+        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
+        <li class="nav-item"><a class="nav-link active" href="reservations.html">Reservations</a></li>
+        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+        <li class="nav-item"><a class="nav-link" href="register.html">Sign Up</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-lg-5 mt-3 px-sm-2" style="max-width:700px;">
+  <h1 class="text-center">Reserve a Table</h1>
+
+  <section class="mb-4">
+    <h2 class="h5">How It Works</h2>
+    <ol>
+      <li>Fill out the form below with your details and preferred time.</li>
+      <li>We confirm your reservation by email within a few hours.</li>
+      <li>Arrive, check in at the front desk, and enjoy your meal.</li>
+    </ol>
+  </section>
+
+  <!-- TASK 9: Bootstrap form classes -->
+  <form class="card p-lg-4 p-3 shadow-sm mb-5 needs-validation" novalidate data-success="Thank you! Your reservation request has been received." aria-label="Reservation form">
+    <div class="mb-3">
+      <label for="fullName" class="form-label">Full Name</label>
+      <input type="text" class="form-control" id="fullName" name="fullName" data-label="Full name" minlength="2" placeholder="Your name" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <div class="input-group">
+        <span class="input-group-text">@</span>
+        <input type="email" class="form-control" id="email" name="email" data-label="Email" placeholder="you@example.com" required>
+      </div>
+    </div>
+
+    <div class="row g-3 mb-3">
+      <div class="col-12 col-sm-6">
+        <label for="guests" class="form-label">Number of Guests</label>
+        <select class="form-select" id="guests">
+          <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option>
+        </select>
+      </div>
+      <div class="col-12 col-sm-6">
+        <label for="date" class="form-label">Date</label>
+        <input type="date" class="form-control" id="date" name="date" data-label="Date" data-future required>
+      </div>
+    </div>
+
+    <fieldset class="mb-3">
+      <legend class="form-label h6">Seating Preference</legend>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="seating" id="indoor" checked>
+        <label class="form-check-label" for="indoor">Indoor</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="seating" id="outdoor">
+        <label class="form-check-label" for="outdoor">Outdoor</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="seating" id="bar">
+        <label class="form-check-label" for="bar">Bar</label>
+      </div>
+    </fieldset>
+
+    <div class="mb-3">
+      <label for="requests" class="form-label">Special Requests</label>
+      <textarea class="form-control" id="requests" rows="3" placeholder="Allergies, birthday, anything we should know"></textarea>
+    </div>
+
+    <div class="form-check mb-3">
+      <input class="form-check-input" type="checkbox" id="reminder">
+      <label class="form-check-label" for="reminder">Send me a reminder email</label>
+    </div>
+
+    <button type="submit" class="btn btn-copper w-100">Submit Reservation</button>
+  </form>
+</div>
+
+<footer class="site-footer text-center py-3 mt-4">
+  <p class="mb-0">Team members: Amir Kadylbek · Zhursin Sirnebayev · Beknur Syzdyk</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/validation.js"></script>
+</body>
+</html>
