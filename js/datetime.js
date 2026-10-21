@@ -1,6 +1,4 @@
-// ===== TASK 5 — Current date and time =====
-// Uses the Date object and refreshes every second.
-// Output example: "October 9, 2026, 10:45:12 AM"
+
 (function () {
   const el = document.getElementById('datetime');
   if (!el) return;

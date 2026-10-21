@@ -1,11 +1,9 @@
-// ===== TASK 2 — Accordion (FAQ) =====
-// Answers are hidden by default (max-height: 0 in CSS).
-// Click on a question -> open it, click again -> close it.
+
 (function () {
   const items = document.querySelectorAll('.faq-item');
   if (!items.length) return;
 
-  const ONE_AT_A_TIME = true; // set to false to let several answers stay open
+  const ONE_AT_A_TIME = true; 
 
   function closeItem(item) {
     item.classList.remove('open');
@@ -17,7 +15,7 @@
     const answer = item.querySelector('.faq-answer');
     item.classList.add('open');
     item.querySelector('.faq-question').setAttribute('aria-expanded', 'true');
-    answer.style.maxHeight = answer.scrollHeight + 'px'; // smooth slide down
+    answer.style.maxHeight = answer.scrollHeight + 'px'; 
   }
 
   items.forEach(function (item) {
