@@ -1,13 +1,4 @@
-// ===== TASK 1 — Form validation =====
-// Works on every <form class="needs-validation" novalidate>.
-// Rules are set with normal HTML attributes:
-//   required            -> field must not be empty
-//   type="email"        -> must look like an email
-//   minlength="8"       -> minimum length
-//   data-strong         -> must contain a letter AND a number
-//   data-match="#id"    -> must equal another field (password confirmation)
-//   data-future         -> date must be today or later
-//   data-label="Name"   -> nice name used in error messages
+
 (function () {
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
@@ -15,21 +6,17 @@
     return input.dataset.label || input.name || 'This field';
   }
 
-  // Returns an error message, or '' when the field is valid
   function getError(input, form) {
     const label = getLabel(input);
 
-    // checkbox (e.g. "I agree to the terms")
     if (input.type === 'checkbox') {
       return input.required && !input.checked ? 'You must accept this to continue.' : '';
     }
 
-    // do not trim passwords, trim everything else
     const value = input.type === 'password' ? input.value : input.value.trim();
 
     if (input.required && value === '') return label + ' is required.';
-    if (value === '') return ''; // optional and empty -> OK
-
+    if (value === '') return ''; 
     if (input.type === 'email' && !EMAIL_RE.test(value)) {
       return 'Please enter a valid email (example: name@example.com).';
     }
@@ -52,7 +39,6 @@
     return '';
   }
 
-  // Shows / clears the red or green state + message under the field
   function validateField(input, form) {
     const message = getError(input, form);
     const anchor = input.closest('.input-group, .form-check') || input;
@@ -104,7 +90,7 @@
     });
 
     form.addEventListener('submit', function (e) {
-      e.preventDefault(); // no backend, so we never really send the form
+      e.preventDefault(); 
       let firstBad = null;
       fields.forEach(function (f) {
         if (!validateField(f, form) && !firstBad) firstBad = f;
