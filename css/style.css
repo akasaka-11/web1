@@ -221,3 +221,177 @@ body { transition: background-color .6s ease; }
 .hero h1 {
   color: #ffffff;
 }
+
+/* =====================================================================
+   ASSIGNMENT 5 additions
+   ===================================================================== */
+
+/* ---------- Narrow page / form widths (replace old inline styles) ---------- */
+.narrow-600 { max-width: 600px; }
+.narrow-700 { max-width: 700px; }
+
+/* ---------- Keyboard focus (menu navigation) ---------- */
+.navbar-copper .nav-link:focus-visible,
+.navbar-copper .theme-toggle:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ---------- Day / Night toggle button ---------- */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  min-width: 4.5rem;
+  transition: background-color .25s ease, color .25s ease, transform .25s ease;
+}
+.theme-toggle:hover {
+  background: var(--gold);
+  color: var(--brown-dark);
+  transform: scale(1.05);
+}
+
+/* Smooth colour change when the theme switches */
+body, .plain-card, .faq-item, .opening-hours, .dish-card, .order-panel,
+.popup-box, .card, .table {
+  transition: background-color .5s ease, color .5s ease, border-color .5s ease;
+}
+
+/* ---------- Night theme ---------- */
+body.night {
+  background-color: #1b110d;
+  color: #f0e6d6;
+}
+body.night h1, body.night h2, body.night h3, body.night .brand-font,
+body.night .card-title.brand-font, body.night .faq-question {
+  color: var(--gold);
+}
+body.night .hero h1 { color: #fff; }
+body.night a:not(.btn):not(.nav-link) { color: #e2c27a; }
+body.night .opening-hours { background: #2c1d16; }
+body.night .plain-card,
+body.night .faq-item,
+body.night .dish-card,
+body.night .order-panel,
+body.night .popup-box {
+  background: #2a1c15;
+  border-color: #4a3428;
+  color: #f0e6d6;
+}
+body.night .faq-question:hover { background: #35241b; }
+body.night .popup-close { color: #cdbca3; }
+body.night .site-footer { background: #0f0a07; }
+body.night .form-control,
+body.night .form-select {
+  background-color: #34241b;
+  border-color: #5a4334;
+  color: #f0e6d6;
+}
+body.night .btn-outline-secondary { color: #e6d9c4; border-color: #8a7660; }
+body.night .btn-outline-secondary:hover { background: #8a7660; color: #1b110d; }
+
+/* ---------- Star rating ---------- */
+.star-rating { display: inline-flex; gap: .25rem; }
+.star {
+  background: none;
+  border: 0;
+  padding: 0 .1rem;
+  font-size: 2.6rem;
+  line-height: 1;
+  color: #cbbfae;               /* empty star */
+  cursor: pointer;
+  transition: color .2s ease, transform .2s ease;
+}
+.star:hover { transform: scale(1.15); }
+.star.hover    { color: #e6c36a; }   /* preview while hovering */
+.star.selected { color: var(--gold); text-shadow: 0 0 6px rgba(201, 162, 75, .55); }
+.star:focus-visible { outline: 2px solid var(--maroon); outline-offset: 2px; border-radius: 4px; }
+body.night .star:focus-visible { outline-color: var(--gold); }
+.star.pop { animation: star-pop .45s ease; }
+
+@keyframes star-pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.6) rotate(-12deg); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- Interactive menu ---------- */
+.filter-btn {
+  background: transparent;
+  border: 1px solid #8a7660;
+  color: #5b4a3a;
+  transition: background-color .25s ease, color .25s ease, transform .2s ease;
+}
+.filter-btn:hover { background: #efe2c9; color: #3d2f23; transform: translateY(-2px); }
+.filter-btn.is-active,
+.filter-btn.is-active:hover {
+  background: var(--maroon);
+  border-color: var(--maroon);
+  color: #fff;
+}
+body.night .filter-btn { color: #e6d9c4; }
+body.night .filter-btn:hover { background: #35241b; color: #fff; }
+body.night .filter-btn.is-active,
+body.night .filter-btn.is-active:hover { background: var(--maroon); border-color: var(--gold); color: #fff; }
+
+.dish-card-wrap { animation: card-in .4s ease both; }
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.dish-card {
+  height: 100%;
+  background: #fff;
+  border: 1px solid #e3d6c0;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+.dish-card:hover { transform: translateY(-3px); box-shadow: 0 6px 14px rgba(0, 0, 0, .12); }
+
+.order-panel {
+  position: sticky;
+  top: 1rem;
+  background: #fff;
+  border: 1px solid #e3d6c0;
+  border-radius: 6px;
+  padding: 1rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+}
+.order-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  padding: .35rem 0;
+  border-bottom: 1px dashed #e3d6c0;
+  font-size: .95rem;
+}
+.btn-remove {
+  background: none;
+  border: 0;
+  font-size: 1.3rem;
+  line-height: 1;
+  color: #999;
+  cursor: pointer;
+}
+.btn-remove:hover { color: var(--maroon); }
+body.night .order-row { border-bottom-color: #4a3428; }
+body.night .btn-remove:hover { color: var(--gold); }
+
+#orderCount.bump { animation: badge-bump .35s ease; }
+@keyframes badge-bump {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+
+/* ---------- Contact form feedback ---------- */
+.fade-in-alert { animation: card-in .4s ease both; }
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  .dish-card-wrap, .star.pop, #orderCount.bump, .fade-in-alert { animation: none; }
+}
