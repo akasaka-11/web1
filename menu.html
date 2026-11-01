@@ -6,7 +6,11 @@
 <title>The Copper Spoon — Menu</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<!-- Assignment 6: jQuery from the CDN, then our jQuery code -->
+<script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
+<script src="js/script.js"></script>
 </head>
 <body>
 
@@ -38,7 +42,16 @@
   <!-- Assignment 5: interactive menu (filter buttons + order basket), built by js/menu.js -->
   <section class="mb-5" id="findDish">
     <h2 class="text-center">Find Your Dish</h2>
-    <p class="text-center mb-3">Filter the menu, then add dishes to your order.</p>
+    <p class="text-center mb-3">Search or filter the menu, then add dishes to your order.</p>
+
+    <!-- Assignment 6, Tasks 1-2: live search + autocomplete suggestions (js/script.js) -->
+    <div class="dish-search mx-auto mb-3">
+      <label for="dishSearchInput" class="visually-hidden">Search dishes</label>
+      <i class="bi bi-search dish-search-icon" aria-hidden="true"></i>
+      <input type="search" class="form-control" id="dishSearchInput" placeholder="Search dishes, e.g. pizza, salmon, cake"
+             autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="dishSuggestions">
+      <ul class="search-suggestions list-unstyled" id="dishSuggestions" role="listbox" aria-label="Suggested dishes"></ul>
+    </div>
 
     <div class="d-flex flex-wrap justify-content-center gap-2 mb-2" id="filterButtons" role="group" aria-label="Filter dishes">
       <button type="button" class="btn filter-btn is-active" data-filter="all" aria-pressed="true">All</button>
@@ -54,6 +67,7 @@
     <div class="row g-4">
       <div class="col-12 col-lg-8">
         <div class="row g-3" id="dishList"></div>
+        <p class="no-results text-center" id="noResults">No dishes match &ldquo;<span></span>&rdquo;. Try another word.</p>
       </div>
       <div class="col-12 col-lg-4">
         <aside class="order-panel" aria-label="Your order">
@@ -100,24 +114,25 @@
   </div>
 
   <!-- TASK 8: Bootstrap cards in a card-group -->
+  <!-- Assignment 6, Task 9: lazy-loaded images (class="lazy" + data-src) -->
   <h2 class="text-center mb-4">Chef's Picks</h2>
   <div class="card-group mb-5">
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top" alt="Grilled Salmon">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3C/svg%3E" data-src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top lazy" width="600" height="375" alt="Grilled Salmon">
       <div class="card-body">
         <h3 class="card-title h5 brand-font">Grilled Salmon</h3>
         <p class="card-text">Seasonal vegetables, lemon butter sauce.</p>
       </div>
     </div>
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1712725214706-e564b8dd1bbe?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top" alt="Sushi Sampler">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3C/svg%3E" data-src="https://images.unsplash.com/photo-1712725214706-e564b8dd1bbe?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top lazy" width="600" height="375" alt="Sushi Sampler">
       <div class="card-body">
         <h3 class="card-title h5 brand-font">Sushi Sampler</h3>
         <p class="card-text">A rotating chef's selection of nigiri and rolls.</p>
       </div>
     </div>
     <div class="card">
-      <img src="https://images.unsplash.com/photo-1608108132933-741a71c144ef?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top" alt="Chocolate Layer Cake">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3C/svg%3E" data-src="https://images.unsplash.com/photo-1608108132933-741a71c144ef?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top lazy" width="600" height="375" alt="Chocolate Layer Cake">
       <div class="card-body">
         <h3 class="card-title h5 brand-font">Chocolate Layer Cake</h3>
         <p class="card-text">Made in-house, three layers.</p>

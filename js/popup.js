@@ -33,7 +33,8 @@
     if (e.key === 'Escape') closePopup();
   });
 
-  overlay.addEventListener('form:valid', function () {
+  // Assignment 6: close after script.js has finished "sending" the form
+  overlay.addEventListener('form:sent', function () {
     setTimeout(closePopup, 1800);
   });
 })();

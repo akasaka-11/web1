@@ -36,6 +36,11 @@
   }
 
   function setSending(isSending) {
+    // Assignment 6: same jQuery spinner + "Please wait…" as the other forms (js/script.js)
+    if (window.setButtonLoading) {
+      window.setButtonLoading(submitButton, isSending);
+      return;
+    }
     submitButton.disabled = isSending;
     submitButton.textContent = isSending ? 'Sending...' : 'Send Message';
   }
@@ -47,12 +52,14 @@
     form.reset();
     showFeedback('success', 'Thank you, ' + name + '! Your message was sent (reference #' + result.id + ').');
     window.playSound && window.playSound('success');
+    window.showToast && window.showToast('Message sent successfully');   // Assignment 6, Task 7
   }
 
   // Callback: runs when the request failed
   function handleError() {
     setSending(false);
     showFeedback('danger', 'Sorry, the message could not be sent. Check your connection and try again.');
+    window.showToast && window.showToast('Message could not be sent', 'error');   // Assignment 6, Task 7
   }
 
   form.addEventListener('submit', function (event) {

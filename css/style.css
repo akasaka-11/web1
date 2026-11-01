@@ -395,3 +395,341 @@ body.night .btn-remove:hover { color: var(--gold); }
 @media (prefers-reduced-motion: reduce) {
   .dish-card-wrap, .star.pop, #orderCount.bump, .fade-in-alert { animation: none; }
 }
+
+/* =====================================================================
+   ASSIGNMENT 6 additions (jQuery features in js/script.js)
+   ===================================================================== */
+
+/* ---------- Task 4: colourful scroll progress bar ---------- */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 6px;
+  background: rgba(46, 26, 18, .18);
+  z-index: 1990;
+  pointer-events: none;
+}
+.scroll-progress-bar {
+  position: relative;
+  height: 100%;
+  width: 0;
+  border-radius: 0 6px 6px 0;
+  /* moving candy stripes on top of a maroon -> copper -> gold gradient.
+     The gradient is as wide as the window, so the colour changes as the bar grows. */
+  background:
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, .22) 0 8px, transparent 8px 16px),
+    linear-gradient(90deg, #7a2331 0%, #a8432f 30%, #d07a35 60%, #c9a24b 82%, #f3d27a 100%);
+  background-size: 22.6px 22.6px, 100vw 100%;
+  box-shadow: 0 0 10px rgba(208, 122, 53, .75), 0 1px 3px rgba(0, 0, 0, .25);
+  animation: progress-stripes 1s linear infinite;
+  transition: width .12s ease-out;
+}
+/* glowing tip */
+.scroll-progress-bar::after {
+  content: "";
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff4d6;
+  box-shadow: 0 0 8px 3px rgba(243, 210, 122, .9);
+  transform: translateY(-50%);
+}
+@keyframes progress-stripes {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 22.6px 0, 0 0; }
+}
+/* % label that follows the tip while scrolling */
+.scroll-progress-label {
+  position: absolute;
+  top: 12px;
+  transform: translateX(-50%) translateY(-4px);
+  padding: .1rem .5rem;
+  border-radius: 999px;
+  background: var(--maroon);
+  border: 1px solid var(--gold);
+  color: #fff4d6;
+  font: 700 .72rem/1.4 "Georgia", serif;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+  opacity: 0;
+  transition: opacity .3s ease, transform .3s ease;
+}
+.scroll-progress.is-scrolling .scroll-progress-label {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+body.night .scroll-progress { background: rgba(255, 255, 255, .08); }
+
+/* ---------- Tasks 1-2: dish search + autocomplete ---------- */
+.dish-search {
+  position: relative;
+  max-width: 520px;
+}
+.dish-search .form-control { padding-left: 2.4rem; }
+.dish-search-icon {
+  position: absolute;
+  left: .9rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #8a7660;
+  pointer-events: none;
+}
+.dish-search input[type="search"]::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: .9rem;
+  height: .9rem;
+  cursor: pointer;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 2l12 12M14 2L2 14' stroke='%237a2331' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+body.night .dish-search input[type="search"]::-webkit-search-cancel-button {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M2 2l12 12M14 2L2 14' stroke='%23c9a24b' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.dish-search .form-control:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 .2rem rgba(201, 162, 75, .3);
+}
+.search-suggestions {
+  display: none;                 /* shown with jQuery .show() */
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: .3rem 0;
+  background: #fff;
+  border: 1px solid #e3d6c0;
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, .12);
+  z-index: 20;
+}
+.suggestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: .5rem .9rem;
+  cursor: pointer;
+  font-size: .98rem;
+}
+.suggestion strong { color: var(--maroon); }
+.suggestion-meta { font-size: .8rem; color: #8a7660; white-space: nowrap; }
+.suggestion.is-active { background: #f5ead9; }
+.no-results {
+  display: none;                 /* toggled with jQuery .toggle() */
+  padding: 1.5rem 1rem;
+  border: 1px dashed #cdbca3;
+  border-radius: 6px;
+}
+body.night .search-suggestions { background: #2a1c15; border-color: #4a3428; }
+body.night .suggestion.is-active { background: #3a281e; }
+body.night .suggestion strong { color: var(--gold); }
+body.night .suggestion-meta,
+body.night .dish-search-icon { color: #b8a58c; }
+body.night .no-results { border-color: #5a4334; }
+
+/* ---------- Task 3: FAQ search highlighting ---------- */
+.faq-search { max-width: 800px; margin: 0 auto; }
+.faq-search .dish-search { max-width: none; }
+mark.search-hit {
+  padding: 0 .1em;
+  border-radius: 3px;
+  background: #f3d27a;
+  color: #2e1a12;
+  box-shadow: 0 0 0 1px rgba(201, 162, 75, .6);
+}
+body.night mark.search-hit { background: var(--gold); color: #1b110d; }
+
+/* ---------- Task 5: animated counter ---------- */
+.stats-section { padding: 2.5rem 0 1rem; }
+.stat-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .25rem;
+  padding: 1.4rem .75rem;
+  background: #fff;
+  border: 1px solid #e3d6c0;
+  border-top: 4px solid var(--gold);
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, .06);
+}
+.stat-icon { font-size: 1.5rem; color: var(--gold); }
+.stat-number {
+  font-family: "Playfair Display", "Georgia", serif;
+  font-weight: 700;
+  font-size: 2.2rem;
+  line-height: 1.1;
+  color: var(--maroon);
+  font-variant-numeric: lining-nums tabular-nums;   /* same-width digits while counting */
+}
+.stat-label { font-size: .9rem; color: #5b4a3a; }
+@media (min-width: 992px) { .stat-number { font-size: 2.8rem; } }
+body.night .stat-card {
+  background: #2a1c15;
+  border-color: #4a3428;
+  border-top-color: var(--gold);
+}
+body.night .stat-number { color: var(--gold); }
+body.night .stat-label { color: #cdbca3; }
+
+/* ---------- Task 6: spinner button ---------- */
+.btn-copper:disabled {
+  background-color: var(--maroon);
+  border-color: var(--maroon);
+  color: #fff;
+  opacity: .8;
+  cursor: progress;
+}
+
+/* ---------- Task 7: toast notifications ---------- */
+.toast-stack {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 2100;                   /* above the subscribe popup */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: .6rem;
+  pointer-events: none;
+}
+.cs-toast {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  width: 340px;
+  max-width: calc(100vw - 2rem);
+  padding: .8rem .9rem;
+  background: var(--brown-dark);
+  color: #f5ead9;
+  border-left: 5px solid #3f9a62;
+  border-radius: 6px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .3);
+  pointer-events: auto;
+}
+.cs-toast-icon {
+  flex: 0 0 auto;
+  width: 1.6rem;
+  height: 1.6rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #3f9a62;
+  color: #fff;
+  font-weight: 700;
+  font-family: "Georgia", serif;
+}
+.cs-toast-text { flex: 1; font-size: .95rem; }
+.cs-toast-close {
+  background: none;
+  border: 0;
+  color: #cdbca3;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.cs-toast-close:hover { color: #fff; }
+.cs-toast-info  { border-left-color: var(--gold); }
+.cs-toast-info .cs-toast-icon { background: var(--gold); color: var(--brown-dark); }
+.cs-toast-error { border-left-color: #c0392b; }
+.cs-toast-error .cs-toast-icon { background: #c0392b; }
+body.night .cs-toast {
+  background: #3a281e;
+  border-color: #4a3428;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, .55);
+}
+body.night .cs-toast-success { border-left-color: #3f9a62; }
+@media (max-width: 575.98px) {
+  .toast-stack { left: 1rem; align-items: stretch; }
+  .cs-toast { width: auto; }
+}
+
+/* ---------- Task 8: copy to clipboard ---------- */
+.copy-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-bottom: .45rem;
+}
+.copy-label { font-weight: 700; }
+.copy-btn {
+  position: relative;
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 1px solid #cdbca3;
+  border-radius: 6px;
+  background: #fff;
+  color: var(--maroon);
+  cursor: pointer;
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease;
+}
+.copy-btn:hover { background: #efe2c9; }
+.copy-btn:focus-visible { outline: 2px solid var(--maroon); outline-offset: 2px; }
+.copy-btn.is-copied { background: #3f9a62; border-color: #3f9a62; color: #fff; }
+.copy-tooltip {
+  display: none;                   /* shown with jQuery .fadeIn() */
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: .3rem .6rem;
+  border-radius: 4px;
+  background: var(--brown-dark);
+  color: #fff;
+  font-size: .78rem;
+  white-space: nowrap;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .2);
+  z-index: 5;
+}
+.copy-tooltip::after {             /* small arrow under the tooltip */
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--brown-dark);
+}
+body.night .copy-btn { background: #2a1c15; border-color: #5a4334; color: var(--gold); }
+body.night .copy-btn:hover { background: #35241b; }
+body.night .copy-btn.is-copied { background: #3f9a62; border-color: #3f9a62; color: #fff; }
+body.night .copy-tooltip { background: #f5ead9; color: #1b110d; }
+body.night .copy-tooltip::after { border-top-color: #f5ead9; }
+
+/* ---------- Task 9: lazy-loaded images ---------- */
+img.lazy {
+  background: linear-gradient(100deg, #eadcc4 30%, #f8f0e2 50%, #eadcc4 70%);
+  background-size: 300% 100%;
+  animation: lazy-shimmer 1.3s linear infinite;      /* placeholder shimmer */
+}
+img.lazy.is-loaded {
+  background: none;
+  animation: lazy-fade-in .6s ease both;       /* fade in when the real photo arrives */
+}
+.plain-card img.lazy,
+.card-img-top.lazy { height: auto; }
+@keyframes lazy-shimmer {
+  from { background-position: 100% 0; }
+  to   { background-position: -100% 0; }
+}
+@keyframes lazy-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+body.night img.lazy:not(.is-loaded) {
+  background-image: linear-gradient(100deg, #2c1d16 30%, #3d2a20 50%, #2c1d16 70%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-progress-bar, img.lazy { animation: none; }
+}

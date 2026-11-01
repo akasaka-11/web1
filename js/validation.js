@@ -59,17 +59,6 @@
     return message === '';
   }
 
-  function showSuccess(form) {
-    const old = form.querySelector('.js-success');
-    if (old) old.remove();
-    const alert = document.createElement('div');
-    alert.className = 'alert alert-success js-success';
-    alert.setAttribute('role', 'alert');
-    alert.textContent = form.dataset.success || 'Form submitted successfully!';
-    form.prepend(alert);
-    setTimeout(function () { alert.remove(); }, 5000);
-  }
-
   document.querySelectorAll('form.needs-validation').forEach(function (form) {
     const fields = Array.from(form.querySelectorAll('input, textarea')).filter(function (f) {
       return !['radio', 'submit', 'button'].includes(f.type);
@@ -97,14 +86,9 @@
       });
       if (firstBad) { firstBad.focus(); return; }
 
-      form.reset();
-      fields.forEach(function (f) {
-        f.classList.remove('is-valid', 'is-invalid');
-        const anchor = f.closest('.input-group, .form-check') || f;
-        const err = anchor.nextElementSibling;
-        if (err && err.classList.contains('js-error')) err.remove();
-      });
-      showSuccess(form);
+      // Assignment 6: the form is valid, so hand it over to js/script.js (jQuery).
+      // It shows the loading spinner, waits, then resets the form and shows
+      // the success message + toast.
       form.dispatchEvent(new CustomEvent('form:valid', { bubbles: true }));
     });
   });
