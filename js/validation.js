@@ -1,95 +1,87 @@
-
 (function () {
-  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  'use strict';
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+  const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s]).{8,}$/;
+  const passwordMessage = 'Use at least 8 characters with uppercase, lowercase, a number and a symbol.';
 
-  function getLabel(input) {
-    return input.dataset.label || input.name || 'This field';
+  // Count digits separately so punctuation-only strings cannot pass as phone numbers.
+  function validPhone(value) {
+    const digits = value.replace(/\D/g, '');
+    return /^\+?[\d ()-]+$/.test(value) && digits.length >= 10 && digits.length <= 15;
   }
 
-  function getError(input, form) {
-    const label = getLabel(input);
-
-    if (input.type === 'checkbox') {
-      return input.required && !input.checked ? 'You must accept this to continue.' : '';
-    }
-
-    const value = input.type === 'password' ? input.value : input.value.trim();
-
-    if (input.required && value === '') return label + ' is required.';
-    if (value === '') return ''; 
-    if (input.type === 'email' && !EMAIL_RE.test(value)) {
-      return 'Please enter a valid email (example: name@example.com).';
-    }
-    if (input.minLength > 0 && value.length < input.minLength) {
-      return label + ' must be at least ' + input.minLength + ' characters.';
-    }
-    if (input.dataset.strong !== undefined && !(/[A-Za-z]/.test(value) && /\d/.test(value))) {
-      return label + ' must contain at least one letter and one number.';
-    }
-    if (input.dataset.match) {
-      const other = form.querySelector(input.dataset.match);
-      if (other && other.value !== input.value) return 'Passwords do not match.';
-    }
-    if (input.dataset.future !== undefined) {
+  function fieldError(field, form) {
+    const value = field.value.trim();
+    const label = field.dataset.label || field.labels?.[0]?.textContent.trim() || field.name || 'This field';
+    if (field.type === 'checkbox') return field.dataset.required !== undefined && !field.checked ? 'Please confirm that you agree to save this demo account on your device.' : '';
+    if (field.dataset.required !== undefined && !value) return label + ' is required.';
+    if (!value) return '';
+    if (field.dataset.email !== undefined && !emailPattern.test(value)) return 'Enter a valid email address, such as name@example.com.';
+    if (field.dataset.phone !== undefined && !validPhone(value)) return 'Enter 10–15 digits. You may include +, spaces, parentheses or hyphens.';
+    if (field.dataset.strong !== undefined && !passwordPattern.test(field.value)) return passwordMessage;
+    if (field.dataset.minlength && value.length < Number(field.dataset.minlength)) return label + ' must be at least ' + field.dataset.minlength + ' characters.';
+    if (field.dataset.match && form.querySelector(field.dataset.match)?.value !== field.value) return 'Passwords do not match.';
+    // Local midnight avoids UTC date shifts for guests in other time zones.
+    if (field.dataset.future !== undefined) {
       const chosen = new Date(value + 'T00:00:00');
       const today = new Date();
       today.setHours(0, 0, 0, 0);
-      if (chosen < today) return 'Please choose today or a future date.';
+      if (Number.isNaN(chosen.getTime()) || chosen < today) return 'Choose today or a future date.';
+    }
+    if (field.id === 'time') {
+      const date = form.querySelector('#date')?.value;
+      if (date && new Date(date + 'T' + value) <= new Date()) return 'Choose a time in the future.';
     }
     return '';
   }
 
-  function validateField(input, form) {
-    const message = getError(input, form);
-    const anchor = input.closest('.input-group, .form-check') || input;
-
-    const old = anchor.nextElementSibling;
-    if (old && old.classList.contains('js-error')) old.remove();
-    input.classList.remove('is-valid', 'is-invalid');
-
-    if (message) {
-      input.classList.add('is-invalid');
-      const div = document.createElement('div');
-      div.className = 'invalid-feedback d-block js-error';
-      div.textContent = message;
-      anchor.insertAdjacentElement('afterend', div);
-    } else if (input.value.trim() !== '' || input.checked) {
-      input.classList.add('is-valid');
+  function showFieldError(field, message) {
+    const errorId = field.id + 'Error';
+    let feedback = document.getElementById(errorId);
+    if (!feedback) {
+      feedback = document.createElement('div');
+      feedback.id = errorId;
+      feedback.className = 'invalid-feedback js-error';
+      const parent = field.closest('.input-group')?.parentElement || field.parentElement;
+      parent.append(feedback);
     }
-    return message === '';
+    feedback.textContent = message;
+    feedback.hidden = !message;
+    feedback.style.display = message ? 'block' : 'none';
+    field.classList.toggle('is-invalid', Boolean(message));
+    field.setAttribute('aria-invalid', String(Boolean(message)));
+    const describedBy = new Set((field.getAttribute('aria-describedby') || '').split(/\s+/).filter(Boolean));
+    describedBy.add(errorId);
+    field.setAttribute('aria-describedby', [...describedBy].join(' '));
+    return !message;
   }
 
+  // Login reuses these same rules without enabling browser-native validation.
+  window.CopperValidation = { emailPattern, passwordPattern, passwordMessage, validPhone, showFieldError };
   document.querySelectorAll('form.needs-validation').forEach(function (form) {
-    const fields = Array.from(form.querySelectorAll('input, textarea')).filter(function (f) {
-      return !['radio', 'submit', 'button'].includes(f.type);
-    });
-
-    fields.forEach(function (f) {
-      f.addEventListener('blur', function () { validateField(f, form); });
-      f.addEventListener('change', function () { validateField(f, form); });
-      f.addEventListener('input', function () {
-        if (f.classList.contains('is-invalid')) validateField(f, form);
-        // if the password changes, re-check the confirmation field
-        fields.forEach(function (other) {
-          if (other.dataset.match && form.querySelector(other.dataset.match) === f && other.value !== '') {
-            validateField(other, form);
-          }
+    const fields = [...form.querySelectorAll('input, textarea, select')].filter(field => !['radio', 'submit', 'button', 'hidden'].includes(field.type));
+    const validate = field => showFieldError(field, fieldError(field, form));
+    fields.forEach(function (field) {
+      field.addEventListener('blur', () => validate(field));
+      field.addEventListener('change', () => validate(field));
+      field.addEventListener('input', function () {
+        if (field.classList.contains('is-invalid')) validate(field);
+        fields.filter(other => other.dataset.match && form.querySelector(other.dataset.match) === field).forEach(other => {
+          if (other.value) validate(other);
         });
       });
     });
-
-    form.addEventListener('submit', function (e) {
-      e.preventDefault(); 
-      let firstBad = null;
-      fields.forEach(function (f) {
-        if (!validateField(f, form) && !firstBad) firstBad = f;
-      });
-      if (firstBad) { firstBad.focus(); return; }
-
-      // Assignment 6: the form is valid, so hand it over to js/script.js (jQuery).
-      // It shows the loading spinner, waits, then resets the form and shows
-      // the success message + toast.
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+      let firstInvalid = null;
+      fields.forEach(field => { if (!validate(field) && !firstInvalid) firstInvalid = field; });
+      if (firstInvalid) { firstInvalid.focus(); return; }
+      // Only validated data reaches the registration, reservation and API handlers.
       form.dispatchEvent(new CustomEvent('form:valid', { bubbles: true }));
+    });
+    form.addEventListener('reset', function () {
+      fields.forEach(field => { field.classList.remove('is-valid', 'is-invalid'); field.removeAttribute('aria-invalid'); });
+      form.querySelectorAll('.js-error').forEach(error => { error.hidden = true; error.style.display = 'none'; });
     });
   });
 })();

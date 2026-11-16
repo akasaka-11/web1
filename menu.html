@@ -2,33 +2,46 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Set the canvas colour immediately, before any stylesheet or external script loads. -->
+<script>
+(function () {
+  var theme = 'light';
+  try { if (localStorage.getItem('copperSpoonTheme') === 'night') theme = 'dark'; } catch (error) {}
+  document.documentElement.setAttribute('data-bs-theme', theme);
+})();
+</script>
+<style>
+  html { background: #f5ead9; color-scheme: light; }
+  html[data-bs-theme="dark"] { background: #1b110d; color-scheme: dark; }
+</style>
+<script src="js/theme.js?v=3" defer></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>The Copper Spoon — Menu</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
-<!-- Assignment 6: jQuery from the CDN, then our jQuery code -->
-<script src="https://code.jquery.com/jquery-4.0.0.min.js"></script>
-<script src="js/script.js"></script>
+<link rel="stylesheet" href="css/style.css?v=3">
+
 </head>
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-copper px-sm-2 py-lg-3">
+<nav class="navbar navbar-expand-xl navbar-copper px-sm-2 py-lg-3">
   <div class="container">
     <a class="navbar-brand" href="index.html">The Copper Spoon</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navMenu">
-      <ul class="navbar-nav ms-auto gap-lg-3">
+      <ul class="navbar-nav ms-auto gap-xl-1">
         <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
         <li class="nav-item"><a class="nav-link active" href="menu.html">Menu</a></li>
         <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
         <li class="nav-item"><a class="nav-link" href="gallery.html">Gallery</a></li>
         <li class="nav-item"><a class="nav-link" href="reservations.html">Reservations</a></li>
         <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
-        <li class="nav-item"><a class="nav-link" href="register.html">Sign Up</a></li>
+        <li class="nav-item auth-link"><a class="nav-link" href="register.html">Sign Up</a></li>
+        <li class="nav-item auth-link"><a class="nav-link" href="login.html">Sign In</a></li>
+        <li class="nav-item profile-link" hidden><a class="nav-link" href="profile.html">Profile</a></li>
         <li class="nav-item"><button type="button" class="btn btn-sm theme-toggle" id="themeToggle" aria-pressed="false" aria-label="Switch to night theme">Night</button></li>
       </ul>
     </div>
@@ -39,12 +52,10 @@
   <h1 class="text-center">Our Menu</h1>
   <p class="text-center mb-4">Everything is cooked to order. Prices are in USD.</p>
 
-  <!-- Assignment 5: interactive menu (filter buttons + order basket), built by js/menu.js -->
   <section class="mb-5" id="findDish">
     <h2 class="text-center">Find Your Dish</h2>
-    <p class="text-center mb-3">Search or filter the menu, then add dishes to your order.</p>
+    <p class="text-center mb-3">Search or filter the menu, then build a demo order saved on this device.</p>
 
-    <!-- Assignment 6, Tasks 1-2: live search + autocomplete suggestions (js/script.js) -->
     <div class="dish-search mx-auto mb-3">
       <label for="dishSearchInput" class="visually-hidden">Search dishes</label>
       <i class="bi bi-search dish-search-icon" aria-hidden="true"></i>
@@ -77,7 +88,7 @@
             <span>Total</span> <span id="orderTotal">$0.00</span>
           </p>
           <div class="d-flex gap-2">
-            <button type="button" class="btn btn-copper flex-fill" id="placeOrderBtn">Place Order</button>
+            <button type="button" class="btn btn-copper flex-fill" id="placeOrderBtn">Save Demo Order</button>
             <button type="button" class="btn btn-outline-secondary" id="clearOrderBtn">Clear</button>
           </div>
           <p class="small mt-3 mb-0" id="orderMessage" aria-live="polite"></p>
@@ -86,53 +97,24 @@
     </div>
   </section>
 
-  <!-- TASK 3: two-column Bootstrap grid section (col-lg-6) -->
-  <div class="row g-4 mb-5">
-    <div class="col-12 col-lg-6">
-      <h2 class="h4">Starters</h2>
-      <table class="table table-striped">
-        <thead><tr><th>Dish</th><th>Description</th><th>Price</th></tr></thead>
-        <tbody>
-          <tr><td>Tomato Bruschetta *</td><td>Toasted bread, garlic, basil, olive oil</td><td>$7.00</td></tr>
-          <tr><td>Soup of the Day *</td><td>Changes daily, ask your server</td><td>$6.50</td></tr>
-          <tr><td>Crispy Calamari</td><td>Served with lemon aioli</td><td>$9.50</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="col-12 col-lg-6">
-      <h2 class="h4">Main Courses</h2>
-      <table class="table table-striped">
-        <thead><tr><th>Dish</th><th>Description</th><th>Price</th></tr></thead>
-        <tbody>
-          <tr><td>Copper House Burger</td><td>Beef patty, cheddar, house sauce, fries</td><td>$13.00</td></tr>
-          <tr><td>Wood-Fired Pizza *</td><td>Mozzarella, tomato, fresh basil</td><td>$12.00</td></tr>
-          <tr><td>Grilled Salmon</td><td>Roasted vegetables, lemon butter sauce</td><td>$16.50</td></tr>
-          <tr><td>Sushi Sampler</td><td>Chef's daily selection, 8 pieces</td><td>$14.00</td></tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- TASK 8: Bootstrap cards in a card-group -->
-  <!-- Assignment 6, Task 9: lazy-loaded images (class="lazy" + data-src) -->
   <h2 class="text-center mb-4">Chef's Picks</h2>
   <div class="card-group mb-5">
     <div class="card">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3C/svg%3E" data-src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top lazy" width="600" height="375" alt="Grilled Salmon">
+      <img src="images/salmon.jpg" loading="lazy" class="card-img-top" width="600" height="375" alt="Grilled Salmon">
       <div class="card-body">
         <h3 class="card-title h5 brand-font">Grilled Salmon</h3>
         <p class="card-text">Seasonal vegetables, lemon butter sauce.</p>
       </div>
     </div>
     <div class="card">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3C/svg%3E" data-src="https://images.unsplash.com/photo-1712725214706-e564b8dd1bbe?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top lazy" width="600" height="375" alt="Sushi Sampler">
+      <img src="images/sushi.jpg" loading="lazy" class="card-img-top" width="600" height="375" alt="Sushi Sampler">
       <div class="card-body">
         <h3 class="card-title h5 brand-font">Sushi Sampler</h3>
         <p class="card-text">A rotating chef's selection of nigiri and rolls.</p>
       </div>
     </div>
     <div class="card">
-      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 5'%3E%3C/svg%3E" data-src="https://images.unsplash.com/photo-1608108132933-741a71c144ef?auto=format&fit=crop&w=600&h=375&q=80" class="card-img-top lazy" width="600" height="375" alt="Chocolate Layer Cake">
+      <img src="images/cake.jpg" loading="lazy" class="card-img-top" width="600" height="375" alt="Chocolate Layer Cake">
       <div class="card-body">
         <h3 class="card-title h5 brand-font">Chocolate Layer Cake</h3>
         <p class="card-text">Made in-house, three layers.</p>
@@ -140,7 +122,6 @@
     </div>
   </div>
 
-  <!-- TASK 3: three-column Bootstrap grid section (col-lg-4) -->
   <div class="row g-4 mb-5">
     <div class="col-12 col-md-6 col-lg-4">
       <h2 class="h5">Desserts</h2>
@@ -157,6 +138,10 @@
   </div>
 </div>
 
+<section class="container my-5" aria-labelledby="inspirationTitle"><h2 id="inspirationTitle">Chef's Recipe Inspiration</h2>
+<p>Explore a meal idea from TheMealDB's public recipe API. These are inspirations, not dishes available for ordering.</p>
+<button class="btn btn-copper mb-3" type="button" id="loadRecipe">Discover a Recipe</button>
+<div id="recipeResult" class="row g-3" aria-live="polite"><p>Click to discover a recipe.</p></div></section>
 <footer class="site-footer text-center py-3 mt-4">
   <p class="mb-0">Team members: Amir Kadylbek · Zhursin Sirnebayev · Beknur Syzdyk</p>
 </footer>
@@ -164,8 +149,10 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="js/menu-data.js"></script>
 <script src="js/menu.js"></script>
-<script src="js/sound.js"></script>
-<script src="js/theme.js"></script>
+<script src="js/recipes.js"></script>
+
+<script src="js/auth.js"></script>
 <script src="js/nav-keys.js"></script>
+<script src="js/script.js"></script>
 </body>
 </html>

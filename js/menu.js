@@ -1,212 +1,220 @@
-/* menu.js — interactive menu on menu.html.
-   1. Filter buttons use a switch statement to decide which dishes to show.
-   2. Dishes are drawn from the menuItems array (menu-data.js) with loops.
-   3. An "order" object (with methods) keeps track of what the guest picked. */
 (function () {
-  const dishList = document.querySelector('#dishList');
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const dishList = $('dishList');
   if (!dishList || typeof menuItems === 'undefined') return;
+  const search = $('dishSearchInput');
+  const suggestions = $('dishSuggestions');
+  const buttons = [...document.querySelectorAll('.filter-btn')];
+  const validFilters = buttons.map(button => button.dataset.filter);
+  let suggestionIndex = -1;
+  let storageWarningShown = false;
 
-  const filterButtons = document.querySelectorAll('.filter-btn');
-  const filterStatus = document.querySelector('#filterStatus');
-  const orderList = document.querySelector('#orderList');
-  const orderTotal = document.querySelector('#orderTotal');
-  const orderCount = document.querySelector('#orderCount');
-  const orderMessage = document.querySelector('#orderMessage');
-
-  /* ---------- Order object: data + methods ---------- */
-  const order = {
-    items: [],
-
-    add: function (dish) {
-      const existing = this.items.find(function (item) { return item.name === dish.name; });
-      if (existing) {
-        existing.quantity += 1;
-      } else {
-        this.items.push({ name: dish.name, price: dish.price, quantity: 1 });
+  function read(key, fallback) {
+    try { return JSON.parse(localStorage.getItem(key)) ?? fallback; }
+    catch { return fallback; }
+  }
+  function save(key, value) {
+    try { localStorage.setItem(key, JSON.stringify(value)); return true; }
+    catch {
+      if (!storageWarningShown) {
+        window.showToast?.('Browser storage is unavailable. Your choices will last for this page only.', 'info');
+        storageWarningShown = true;
       }
-    },
-
-    remove: function (name) {
-      // filter() keeps every item except the one being removed
-      this.items = this.items.filter(function (item) { return item.name !== name; });
-    },
-
-    clear: function () {
-      this.items = [];
-    },
-
-    count: function () {
-      return this.items.reduce(function (sum, item) { return sum + item.quantity; }, 0);
-    },
-
-    total: function () {
-      return this.items.reduce(function (sum, item) { return sum + item.price * item.quantity; }, 0);
-    }
-  };
-
-  function formatPrice(amount) {
-    return '$' + amount.toFixed(2);
-  }
-
-  /* ---------- Filtering with a switch statement ---------- */
-  function filterDishes(filter) {
-    switch (filter) {
-      case 'all':
-        return menuItems;
-      case 'starters':
-      case 'mains':
-      case 'desserts':
-      case 'drinks':
-        return menuItems.filter(function (dish) { return dish.category === filter; });
-      case 'vegetarian':
-        return menuItems.filter(function (dish) { return dish.vegetarian; });
-      case 'under10':
-        return menuItems.filter(function (dish) { return dish.price < 10; });
-      default:
-        return menuItems;
+      return false;
     }
   }
 
-  /* ---------- Drawing the dish cards ---------- */
-  function createDishCard(dish, index) {
+  const savedSearch = read('copperSpoonMenuFilter', {});
+  let filter = validFilters.includes(savedSearch?.filter) ? savedSearch.filter : 'all';
+  search.value = typeof savedSearch?.query === 'string' ? savedSearch.query : '';
+
+  // Rebuild prices from the current menu instead of trusting editable stored totals.
+  const savedOrder = read('copperSpoonOrder', []);
+  let order = Array.isArray(savedOrder) ? savedOrder.filter(item => item && typeof item.name === 'string' && Number.isInteger(item.quantity) && item.quantity > 0).map(item => {
+    const dish = menuItems.find(dish => dish.name === item.name);
+    return dish ? { name: dish.name, price: dish.price, quantity: Math.min(item.quantity, 99) } : null;
+  }).filter(Boolean) : [];
+
+  const price = value => '$' + value.toFixed(2);
+  function matchesCategory(dish) {
+    if (filter === 'all') return true;
+    if (filter === 'vegetarian') return dish.vegetarian;
+    if (filter === 'under10') return dish.price < 10;
+    return dish.category === filter;
+  }
+
+  function createDishCard(dish) {
     const column = document.createElement('div');
     column.className = 'col-12 col-md-6 dish-card-wrap';
-    // Stagger the fade-in so cards appear one after another
-    column.style.animationDelay = (index * 60) + 'ms';
-
-    const card = document.createElement('div');
+    const card = document.createElement('article');
     card.className = 'dish-card';
-
+    const category = document.createElement('p');
+    category.className = 'eyebrow mb-2';
+    category.textContent = dish.category + (dish.vegetarian ? ' · Vegetarian' : '');
     const title = document.createElement('h3');
-    title.className = 'h6 brand-font mb-1';
-    title.textContent = dish.name + (dish.vegetarian ? ' *' : '');
-
+    title.className = 'h5 brand-font mb-2';
+    title.textContent = dish.name;
     const description = document.createElement('p');
-    description.className = 'small mb-2';
+    description.className = 'small mb-3';
     description.textContent = dish.description;
-
     const footer = document.createElement('div');
-    footer.className = 'd-flex justify-content-between align-items-center';
-
-    const price = document.createElement('span');
-    price.className = 'fw-bold';
-    price.textContent = formatPrice(dish.price);
-
-    const addButton = document.createElement('button');
-    addButton.type = 'button';
-    addButton.className = 'btn btn-copper btn-sm';
-    addButton.textContent = 'Add';
-    addButton.addEventListener('click', function () {
-      order.add(dish);
+    footer.className = 'd-flex justify-content-between align-items-center gap-2 mt-auto';
+    const cost = document.createElement('span');
+    cost.className = 'fw-bold';
+    cost.textContent = price(dish.price);
+    const add = document.createElement('button');
+    add.type = 'button';
+    add.className = 'btn btn-copper btn-sm';
+    add.textContent = 'Add';
+    add.setAttribute('aria-label', 'Add ' + dish.name + ' to your order');
+    add.addEventListener('click', function () {
+      const existing = order.find(item => item.name === dish.name);
+      if (existing?.quantity >= 99) { $('orderMessage').textContent = 'This demo supports up to 99 of each dish.'; return; }
+      if (existing) existing.quantity++;
+      else order.push({ name: dish.name, price: dish.price, quantity: 1 });
       renderOrder();
-      orderMessage.textContent = dish.name + ' added.';
-      bump(orderCount);
-      window.playSound && window.playSound('add');
+      save('copperSpoonOrder', order);
+      $('orderMessage').textContent = dish.name + ' added to your order.';
+      window.showToast?.(dish.name + ' added');
     });
-
-    footer.append(price, addButton);
-    card.append(title, description, footer);
+    footer.append(cost, add);
+    card.append(category, title, description, footer);
     column.append(card);
     return column;
   }
 
-  function renderDishes(filter) {
-    const dishes = filterDishes(filter);
-    dishList.innerHTML = '';
-    dishes.forEach(function (dish, index) {
-      dishList.append(createDishCard(dish, index));
+  function renderDishes() {
+    const query = search.value.trim().toLowerCase();
+    // Apply category and search in one pass so changing either cannot reset the other.
+    const dishes = menuItems.filter(dish => matchesCategory(dish) && (dish.name + ' ' + dish.description).toLowerCase().includes(query));
+    dishList.replaceChildren(...dishes.map(createDishCard));
+    $('filterStatus').textContent = 'Showing ' + dishes.length + ' of ' + menuItems.length + ' dishes';
+    const empty = $('noResults');
+    empty.style.display = dishes.length ? 'none' : 'block';
+    empty.textContent = 'No dishes match these choices. Try another search or choose All.';
+    buttons.forEach(button => {
+      const active = button.dataset.filter === filter;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-pressed', String(active));
     });
-    filterStatus.textContent = 'Showing ' + dishes.length + ' of ' + menuItems.length + ' dishes';
+    save('copperSpoonMenuFilter', { filter, query: search.value });
   }
 
-  /* ---------- Drawing the order panel ---------- */
   function renderOrder() {
-    orderList.innerHTML = '';
-
-    if (order.items.length === 0) {
-      const empty = document.createElement('li');
-      empty.className = 'small';
-      empty.textContent = 'Nothing yet. Add a dish to begin.';
-      orderList.append(empty);
+    const list = $('orderList');
+    list.replaceChildren();
+    if (!order.length) {
+      const item = document.createElement('li');
+      item.className = 'small';
+      item.textContent = 'Your table is waiting. Add a dish to begin.';
+      list.append(item);
     }
-
-    // for...of loop over the order items
-    for (const item of order.items) {
+    order.forEach(function (item) {
       const row = document.createElement('li');
       row.className = 'order-row';
-
-      const label = document.createElement('span');
-      label.textContent = item.quantity + ' \u00d7 ' + item.name;
-
-      const right = document.createElement('span');
-      right.className = 'd-flex align-items-center gap-2';
-
-      const lineTotal = document.createElement('span');
-      lineTotal.textContent = formatPrice(item.price * item.quantity);
-
-      const removeButton = document.createElement('button');
-      removeButton.type = 'button';
-      removeButton.className = 'btn-remove';
-      removeButton.setAttribute('aria-label', 'Remove ' + item.name);
-      removeButton.textContent = '\u00d7';
-      removeButton.addEventListener('click', function () {
-        order.remove(item.name);
+      const name = document.createElement('span');
+      name.textContent = item.quantity + ' × ' + item.name;
+      const controls = document.createElement('span');
+      controls.className = 'd-flex align-items-center gap-2';
+      const total = document.createElement('span');
+      total.textContent = price(item.quantity * item.price);
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'btn-remove';
+      remove.textContent = '×';
+      remove.setAttribute('aria-label', 'Remove ' + item.name);
+      remove.addEventListener('click', function () {
+        order = order.filter(dish => dish.name !== item.name);
+        save('copperSpoonOrder', order);
         renderOrder();
-        window.playSound && window.playSound('click');
+        $('orderMessage').textContent = item.name + ' removed.';
       });
-
-      right.append(lineTotal, removeButton);
-      row.append(label, right);
-      orderList.append(row);
-    }
-
-    orderTotal.textContent = formatPrice(order.total());
-    orderCount.textContent = order.count();
-  }
-
-  // Small CSS animation on an element, restarted every time it is called
-  function bump(element) {
-    element.classList.remove('bump');
-    void element.offsetWidth;
-    element.classList.add('bump');
-  }
-
-  /* ---------- Events ---------- */
-  filterButtons.forEach(function (button) {
-    button.addEventListener('click', function () {
-      filterButtons.forEach(function (other) {
-        const isActive = other === button;
-        other.classList.toggle('is-active', isActive);
-        other.setAttribute('aria-pressed', String(isActive));
-      });
-      renderDishes(button.dataset.filter);
-      window.playSound && window.playSound('click');
+      controls.append(total, remove);
+      row.append(name, controls);
+      list.append(row);
     });
-  });
+    $('orderCount').textContent = order.reduce((sum, item) => sum + item.quantity, 0);
+    $('orderTotal').textContent = price(order.reduce((sum, item) => sum + item.quantity * item.price, 0));
+  }
 
-  document.querySelector('#clearOrderBtn').addEventListener('click', function () {
-    order.clear();
-    renderOrder();
-    orderMessage.textContent = 'Order cleared.';
-    window.playSound && window.playSound('click');
-  });
-
-  document.querySelector('#placeOrderBtn').addEventListener('click', function () {
-    if (order.items.length === 0) {
-      orderMessage.textContent = 'Your order is empty. Add a dish first.';
+  function hideSuggestions() {
+    suggestions.replaceChildren();
+    suggestions.style.display = 'none';
+    search.setAttribute('aria-expanded', 'false');
+    search.removeAttribute('aria-activedescendant');
+    suggestionIndex = -1;
+  }
+  function chooseSuggestion(name) {
+    search.value = name;
+    filter = 'all';
+    hideSuggestions();
+    renderDishes();
+  }
+  function buildSuggestions() {
+    hideSuggestions();
+    const query = search.value.trim().toLowerCase();
+    if (!query) return;
+    const matches = menuItems.filter(dish => dish.name.toLowerCase().includes(query)).slice(0, 6);
+    if (!matches.length) return;
+    matches.forEach(function (dish, index) {
+      const option = document.createElement('li');
+      option.id = 'suggestion-' + index;
+      option.className = 'suggestion';
+      option.setAttribute('role', 'option');
+      option.setAttribute('aria-selected', 'false');
+      option.textContent = dish.name;
+      option.addEventListener('mousedown', function (event) { event.preventDefault(); chooseSuggestion(dish.name); });
+      suggestions.append(option);
+    });
+    suggestions.style.display = 'block';
+    search.setAttribute('aria-expanded', 'true');
+  }
+  search.addEventListener('input', function () { renderDishes(); buildSuggestions(); });
+  search.addEventListener('focus', buildSuggestions);
+  search.addEventListener('blur', hideSuggestions);
+  // The combobox keeps focus in the input; aria-activedescendant names its option.
+  search.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape') { hideSuggestions(); return; }
+    if (event.key === 'Enter' && suggestionIndex >= 0) {
+      event.preventDefault();
+      chooseSuggestion(suggestions.children[suggestionIndex].textContent);
       return;
     }
-    // map() turns each item into text, join() glues them together
-    const summary = order.items.map(function (item) {
-      return item.quantity + ' \u00d7 ' + item.name;
-    }).join(', ');
-    orderMessage.textContent = 'Thank you! ' + summary + ' (' + formatPrice(order.total()) +
-      ') is on its way to the kitchen.';
-    order.clear();
-    renderOrder();
-    window.playSound && window.playSound('success');
+    if (!['ArrowDown', 'ArrowUp'].includes(event.key)) return;
+    if (!suggestions.children.length) buildSuggestions();
+    const items = [...suggestions.children];
+    if (!items.length) return;
+    event.preventDefault();
+    suggestionIndex = (suggestionIndex + (event.key === 'ArrowDown' ? 1 : -1) + items.length) % items.length;
+    items.forEach((item, index) => {
+      item.classList.toggle('is-active', index === suggestionIndex);
+      item.setAttribute('aria-selected', String(index === suggestionIndex));
+    });
+    search.setAttribute('aria-activedescendant', items[suggestionIndex].id);
   });
-
-  renderDishes('all');
+  buttons.forEach(button => button.addEventListener('click', function () {
+    filter = button.dataset.filter;
+    hideSuggestions();
+    renderDishes();
+  }));
+  $('clearOrderBtn').addEventListener('click', function () {
+    order = [];
+    save('copperSpoonOrder', order);
+    renderOrder();
+    $('orderMessage').textContent = 'Order cleared.';
+  });
+  $('placeOrderBtn').addEventListener('click', function () {
+    if (!order.length) { $('orderMessage').textContent = 'Add a dish before saving your demo order.'; return; }
+    const total = order.reduce((sum, item) => sum + item.quantity * item.price, 0);
+    // Only clear the draft after a receipt is saved, so failed storage loses no choices.
+    const saved = save('copperSpoonLastOrder', { items: order, total, createdAt: new Date().toISOString() });
+    if (!saved) { $('orderMessage').textContent = 'Could not save your order. Enable browser storage and try again.'; return; }
+    $('orderMessage').textContent = 'Demo order saved on this device: ' + order.map(item => item.quantity + ' × ' + item.name).join(', ') + ' — ' + price(total) + '. No payment or kitchen order was sent.';
+    order = [];
+    save('copperSpoonOrder', order);
+    renderOrder();
+  });
+  renderDishes();
   renderOrder();
 })();

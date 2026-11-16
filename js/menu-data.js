@@ -1,5 +1,5 @@
-/* menu-data.js — the dishes, stored as an array of objects.
-   menu.js reads this array to build the page. */
+
+
 const menuItems = [
   { name: 'Tomato Bruschetta',    category: 'starters', price: 7.00,  vegetarian: true,  description: 'Toasted bread, garlic, basil, olive oil' },
   { name: 'Soup of the Day',      category: 'starters', price: 6.50,  vegetarian: true,  description: 'Changes daily, ask your server' },
